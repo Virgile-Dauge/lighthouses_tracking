@@ -109,16 +109,18 @@ class pose_wrapper(Node):
         quaternion = transform.quaternion()
         position = transform.position()
         t = TransformStamped()
-        #t.header.stamp = self.get_clock().now()
+        ti = self.get_clock().now()
+        print(ti, type(ti))
+        t.header.stamp = self.get_clock().now().to_msg()
         t.header.frame_id = "local"
         t.child_frame_id = device
         t.transform.translation.x = position[0]
         t.transform.translation.y = position[1]
         t.transform.translation.z = position[2]
-        t.transform.rotation.x = quaternion.w
-        t.transform.rotation.y = quaternion.x
-        t.transform.rotation.z = quaternion.y
-        t.transform.rotation.w = quaternion.z
+        t.transform.rotation.x = quaternion.x
+        t.transform.rotation.y = quaternion.y
+        t.transform.rotation.z = quaternion.z
+        t.transform.rotation.w = quaternion.w
         self.broadcaster.sendTransform(t)
 
     def spin(self):
@@ -155,7 +157,7 @@ def main(args=None):
     rclpy.init(args=args)
 
     poser = pose_wrapper()
-    poser.start(10)
+    poser.start(250)
     poser.spin()
 
     # Destroy the node explicitly
